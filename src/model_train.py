@@ -6,7 +6,11 @@ from sklearn.metrics import roc_auc_score, mean_squared_error
 from sklearn.preprocessing import StandardScaler
 
 import matplotlib.pyplot as plt
+from matplotlib.font_manager import FontProperties
 import os
+
+font_path = "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"  # 请确保路径正确
+my_font = FontProperties(fname=font_path)
 
 def train_and_evaluate(features_path):
     features = pd.read_csv(features_path)
@@ -29,12 +33,12 @@ def train_and_evaluate(features_path):
     fpr, tpr, _ = roc_curve(y_test, y_pred)
     os.makedirs('output', exist_ok=True)
     plt.figure()
-    plt.plot(fpr, tpr, label=f'ROC curve (AUC = {auc_repeat:.2f})')
+    plt.plot(fpr, tpr, label=f'ROC曲线 (AUC = {auc_repeat:.2f})')
     plt.plot([0, 1], [0, 1], 'k--')
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.title('复购预测ROC曲线')
-    plt.legend(loc='lower right')
+    plt.xlabel('假阳性率', fontproperties=my_font)
+    plt.ylabel('真阳性率', fontproperties=my_font)
+    plt.title('复购预测ROC曲线', fontproperties=my_font)
+    plt.legend(loc='lower right', prop=my_font)
     plt.savefig('output/repeat_roc.png')
     plt.close()
 
@@ -49,12 +53,12 @@ def train_and_evaluate(features_path):
     # 画ROC曲线
     fpr, tpr, _ = roc_curve(y_test, y_pred)
     plt.figure()
-    plt.plot(fpr, tpr, label=f'ROC curve (AUC = {auc_churn:.2f})')
+    plt.plot(fpr, tpr, label=f'ROC曲线 (AUC = {auc_churn:.2f})')
     plt.plot([0, 1], [0, 1], 'k--')
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.title('流失预测ROC曲线')
-    plt.legend(loc='lower right')
+    plt.xlabel('假阳性率', fontproperties=my_font)
+    plt.ylabel('真阳性率', fontproperties=my_font)
+    plt.title('流失预测ROC曲线', fontproperties=my_font)
+    plt.legend(loc='lower right', prop=my_font)
     plt.savefig('output/churn_roc.png')
     plt.close()
 
@@ -70,18 +74,18 @@ def train_and_evaluate(features_path):
         # 画真实值与预测值散点图
         plt.figure()
         plt.scatter(y_test, y_pred, alpha=0.5)
-        plt.xlabel('真实消费金额')
-        plt.ylabel('预测消费金额')
-        plt.title('未来消费金额预测散点图')
+        plt.xlabel('真实消费金额', fontproperties=my_font)
+        plt.ylabel('预测消费金额', fontproperties=my_font)
+        plt.title('未来消费金额预测散点图', fontproperties=my_font)
         plt.savefig('output/amount_scatter.png')
         plt.close()
         
-    # 特征重要性
+        # 特征重要性
         importances = reg.feature_importances_
         feat_names = features.drop(['用户名', 'repeat', 'is_churn', 'future_amount'], axis=1).columns
         plt.figure(figsize=(8, 6))
         plt.barh(feat_names, importances)
-        plt.title('XGBoost特征重要性')
+        plt.title('XGBoost特征重要性', fontproperties=my_font)
         plt.tight_layout()
         plt.savefig('output/xgb_feature_importance.png')
         plt.close()

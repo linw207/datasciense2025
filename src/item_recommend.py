@@ -4,8 +4,11 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
 import matplotlib.pyplot as plt
+from matplotlib.font_manager import FontProperties
 import os
 
+font_path = "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"  # 请确保路径正确
+my_font = FontProperties(fname=font_path)
 
 def run_item_recommend(input_path, target_user=None):
     df = pd.read_csv(input_path)
@@ -37,8 +40,8 @@ def run_item_recommend(input_path, target_user=None):
             [str(i) for i in top_items['itemsets']],
             top_items['support']
         )
-        plt.xlabel('支持度')
-        plt.title('频繁项集支持度Top10')
+        plt.xlabel('支持度', fontproperties=my_font)
+        plt.title('频繁项集支持度Top10', fontproperties=my_font)
         plt.tight_layout()
         plt.savefig('output/frequent_itemsets_top10.png')
         plt.close()
@@ -59,17 +62,16 @@ def run_item_recommend(input_path, target_user=None):
 
     if target_user is None:
         target_user = user_item.index[0]  # 默认取第一个用户
-    print(f'{target_user} 推荐商品:', recommend(target_user))
-    
     rec_list = recommend(target_user)
     print(f'{target_user} 推荐商品:', rec_list)
     # 可视化推荐商品
     plt.figure(figsize=(8, 4))
     plt.bar(rec_list, range(len(rec_list)))
-    plt.xlabel('商品编号')
-    plt.ylabel('推荐顺序')
-    plt.title(f'{target_user} 协同过滤推荐商品')
+    plt.xlabel('商品编号', fontproperties=my_font)
+    plt.ylabel('推荐顺序', fontproperties=my_font)
+    plt.title(f'{target_user} 协同过滤推荐商品', fontproperties=my_font)
     plt.tight_layout()
+    os.makedirs('output', exist_ok=True)
     plt.savefig(f'output/{target_user}_recommend.png')
     plt.close()
 
